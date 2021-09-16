@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: devdecops-githubactions-gke
+  name: devsecops-githubactions-gke
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: devdecops-githubactions-gke
+      app: devsecops-githubactions-gke
   template:
     metadata:
       labels:
-        app: devdecops-githubactions-gke
+        app: devsecops-githubactions-gke
     spec:
       containers:
         - name: app
