@@ -123,7 +123,10 @@ jobs:
     steps:
       
       - name: ZAP scan 
-        run: sh ./zap-script.sh
+        run: |
+         chmod +x ./zap-script.sh
+         ./zap-script.sh
+        shell: bash
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
