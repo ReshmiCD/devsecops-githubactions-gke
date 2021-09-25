@@ -125,5 +125,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: zap report
-          path: |
-           ./zap_baseline_report.html 
+          path: output/zap_baseline_report.html 
