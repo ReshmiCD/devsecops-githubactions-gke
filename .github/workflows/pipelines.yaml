@@ -125,4 +125,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: zap report
-          path: output/zap_baseline_report.html 
+          path: ./.github/codeql/zap_baseline_report.html 
