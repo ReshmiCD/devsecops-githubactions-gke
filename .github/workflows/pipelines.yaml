@@ -113,17 +113,8 @@ jobs:
           ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$TAG
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
-          kubectl get services -o wide
-          
-      - name: ZAP scan 
-        run: script/zap-script.sh
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-         name: zap report
-         path: |
-          ./zap_baseline_report.html 
+          kubectl get services -o wide        
+     
   DAST:
     name: ZAP
     runs-on: ubuntu-latest
@@ -131,7 +122,7 @@ jobs:
     steps:
       
       - name: ZAP scan 
-        run: script/zap-script.sh
+        run: ./.github/script/zap-script.sh
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
