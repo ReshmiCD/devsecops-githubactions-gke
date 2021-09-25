@@ -124,7 +124,7 @@ jobs:
       
       - name: ZAP scan 
         run: |
-         chmod +x ./zap-script.sh
+         chmod +x zap-script.sh
          ./zap-script.sh
         shell: bash
 
