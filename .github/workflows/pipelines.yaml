@@ -125,7 +125,8 @@ jobs:
 
       - name: Selenium-Test Reporter
         uses: dorny/test-reporter@v1.4.3
-        with:          
+        with:  
+          name: Selenium report
           path: "**/surefire-reports/TEST-*.xml"
           reporter: java-junit
           
