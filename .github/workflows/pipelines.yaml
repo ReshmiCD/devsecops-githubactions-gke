@@ -63,6 +63,13 @@ jobs:
 
       - name: ACR-Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+        
+      - name: ACR-Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: ACR-CodeQL report
+           path: ${{github.workspace}}/  
+        
       
       - name: SAST-Sonar Scanner Cache packages
         uses: actions/cache@v1
@@ -82,6 +89,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ReshmiCD_devsecops-githubactions-gke -DskipTests  
       
+      - name: SAST-Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: SAST-Sonar Scanner report
+           path: ${{github.workspace}}/
+           
       - name: Build with Maven
         run: mvn clean package -DskipTests
         
@@ -146,4 +159,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: zap report
-          path: zap_baseline_report.html  
+          path: ${{github.workspace}}/  
