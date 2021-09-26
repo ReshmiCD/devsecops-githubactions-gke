@@ -31,7 +31,13 @@ jobs:
           settings-path: ${{ github.workspace }}
           
       - name: SIS-Trufflehog-actions-scan
-        uses: nasa-gibs/trufflehog-actions-scan@master 
+        uses: nasa-gibs/trufflehog-actions-scan@master
+        
+      - name: SIS-Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: SIS-Trufflehog report
+           path: ${{github.workspace}}/
 
       - name: SCA-Downloading Dependency check tool
         run: wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip 
@@ -42,7 +48,7 @@ jobs:
       - name: SCA-Upload Test results
         uses: actions/upload-artifact@master
         with:
-           name: Depcheck report
+           name: SCA-Depcheck report
            path: ${{github.workspace}}/
            
         # Initializes the CodeQL tools for scanning.
