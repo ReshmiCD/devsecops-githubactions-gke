@@ -30,47 +30,47 @@ jobs:
           server-id: github
           settings-path: ${{ github.workspace }}
           
-      - name: trufflehog-actions-scan
+      - name: SIS-Trufflehog-actions-scan
         uses: nasa-gibs/trufflehog-actions-scan@master 
 
-      - name: Downloading Dependency check tool
+      - name: SCA-Downloading Dependency check tool
         run: wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip 
 
-      - name: Unzipping archive and installing
+      - name: SCA-Unzipping archive and installing
         run: unzip dependency-check-6.2.2-release.zip && ls -l && dependency-check/bin/dependency-check.sh -s .
           
-      - name: Upload Test results
+      - name: SCA-Upload Test results
         uses: actions/upload-artifact@master
         with:
            name: Depcheck report
            path: ${{github.workspace}}/
            
         # Initializes the CodeQL tools for scanning.
-      - name: Initialize CodeQL
+      - name: ACR-Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
          languages: Java
          config-file: ./.github/codeql/codeql-config.yml
 
-      - name: Autobuild
+      - name: ACR-CoqeQLAutobuild
         uses: github/codeql-action/autobuild@v1
 
-      - name: Perform CodeQL Analysis
+      - name: ACR-Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
       
-      - name: SonarCloud Scanner-Cache packages
+      - name: SAST-Sonar Scanner Cache packages
         uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
+      - name: SAST- Cache Maven packages
         uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
+      - name: SAST-Sonar Cloud Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -113,31 +113,30 @@ jobs:
           ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$TAG
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
-          kubectl get services -o wide     
-     
-      - name: ZAP scan 
+          kubectl get services -o wide  
+             
+      - name: Deploy Sanity -Install Google Chrome # Using shell script to install Google Chrome
+        run: |-
+          chmod +x ./scripts/InstallChrome.sh
+                ./scripts/InstallChrome.sh
+                
+      - name: Deploy Sanity -Test with Selenium
+        run: mvn test --file pom.xml
+
+      - name: Selenium-Test Reporter
+        uses: dorny/test-reporter@v1.4.3
+        with:          
+          path: "**/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+          
+      - name: DAST:ZAP scan 
         run: |
          chmod +x ./zap-script.sh
          ./zap-script.sh
         shell: bash
 
-      - name: Archive production artifacts
+      - name: DAST:Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: zap report
-          path: zap_baseline_report.html          
-      
-      - name: Install Google Chrome # Using shell script to install Google Chrome
-        run: |-
-          chmod +x ./scripts/InstallChrome.sh
-                ./scripts/InstallChrome.sh
-                
-      - name: Test with Selenium
-        run: mvn test --file pom.xml
-
-      - name: Test Reporter
-        uses: dorny/test-reporter@v1.4.3
-        with:
-          name: Run Tests
-          path: "**/surefire-reports/TEST-*.xml"
-          reporter: java-junit
+          path: zap_baseline_report.html  
