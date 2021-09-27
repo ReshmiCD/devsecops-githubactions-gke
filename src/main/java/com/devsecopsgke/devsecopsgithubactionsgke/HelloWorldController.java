@@ -8,6 +8,6 @@ public class HelloWorldController {
     @RequestMapping("/")
     @ResponseBody
     public String helloWorld(){
-        return "DevSecOps Pipeline deploying Spring boot application to GKE Via Github Actions!";
+        return "DevSecOps Pipeline deploying Java Spring boot application to GKE Via Github Actions!";
     }
 }
