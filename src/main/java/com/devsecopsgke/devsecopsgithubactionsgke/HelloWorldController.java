@@ -8,6 +8,6 @@ public class HelloWorldController {
     @RequestMapping("/")
     @ResponseBody
     public String helloWorld(){
-        return "Hello World From GKE Via Github Actions!";
+        return "Java - DevSecOps Pipeline - GKE Via Github Actions!";
     }
 }
